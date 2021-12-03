@@ -1,10 +1,10 @@
-package com.clone.olx;
+package pw.edu.pl.passwdkeychain;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class OlxApplicationTests {
+class PasswdKeychainApplicationTests {
 
 	@Test
 	void contextLoads() {
