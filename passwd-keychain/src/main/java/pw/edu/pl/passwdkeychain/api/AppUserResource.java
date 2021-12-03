@@ -41,6 +41,11 @@ public class AppUserResource {
         appUserService.addPasswordToAppUser(form.getUsername(), form.getPasswordId());
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/passwords")
+    public ResponseEntity<List<Password>> showPasswords() {
+        return ResponseEntity.ok().body(appUserService.showPasswords());
+    }
 }
 
 @Data

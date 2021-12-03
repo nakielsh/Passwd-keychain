@@ -11,4 +11,5 @@ public interface AppUserService {
     void addPasswordToAppUser(String username, Long passwordId);
     AppUser getAppUser(String username);
     List<AppUser> getAppUsers();
+    List<Password> showPasswords();
 }

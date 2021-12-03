@@ -3,6 +3,8 @@ package pw.edu.pl.passwdkeychain.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -12,6 +14,7 @@ import pw.edu.pl.passwdkeychain.domain.AppUser;
 import pw.edu.pl.passwdkeychain.domain.Password;
 import pw.edu.pl.passwdkeychain.repo.AppUserRepo;
 import pw.edu.pl.passwdkeychain.repo.PasswordRepo;
+import pw.edu.pl.passwdkeychain.security.AES;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -38,6 +41,7 @@ public class AppUserServiceImpl implements AppUserService, UserDetailsService {
     @Override
     public Password savePassword(Password password) {
         log.info("Saving new password from service: {} to the database", password.getService());
+//        password.setSavedPassword(passwordEncoder.encode(password.getSavedPassword()));
         return passwordRepo.save(password);
     }
 
@@ -46,6 +50,9 @@ public class AppUserServiceImpl implements AppUserService, UserDetailsService {
         log.info("Adding password with id: {} to the AppUser: {}", passwordId, username);
         AppUser appUser = appUserRepo.findAppUserByUsername(username);
         Password password = passwordRepo.findPasswordById(passwordId);
+
+        password.setSavedPassword(AES.encrypt(password.getSavedPassword(), appUser.getMasterPassword()));
+
         appUser.getSavedPasswords().add(password);
     }
 
@@ -73,5 +80,21 @@ public class AppUserServiceImpl implements AppUserService, UserDetailsService {
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("User"));
         return new org.springframework.security.core.userdetails.User(appUser.getUsername(), appUser.getPassword(), authorities);
+    }
+
+    @Override
+    public List<Password> showPasswords() {
+        AppUser currentAppUser = getCurrentAppUser();
+        return (List<Password>) currentAppUser.getSavedPasswords();
+    }
+
+    public AppUser getCurrentAppUser() {
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        String username = "";
+        if (null != securityContext.getAuthentication()) {
+            username = (String) securityContext.getAuthentication().getPrincipal();
+
+        }
+        return getAppUser(username);
     }
 }

@@ -21,14 +21,14 @@ public class PasswdKeychainApplication {
 
 	@Bean
 	PasswordEncoder passwordEncoder(){
-		return new BCryptPasswordEncoder();
+		return new BCryptPasswordEncoder(13);
 	}
 
 	@Bean
 	CommandLineRunner run(AppUserService appUserService) {
 		return args -> {
 			Password pass1 = appUserService.savePassword(new Password( null, "Faceboook", "test"));
-			Password pass2 = appUserService.savePassword(new Password( null, "Twitter", "twotterPasswd"));
+			Password pass2 = appUserService.savePassword(new Password( null, "Twitter", "test"));
 			Password pass3 = appUserService.savePassword(new Password( null, "Instagram", "instapass"));
 
 			appUserService.saveAppUser(new AppUser(null, "Lisek Ogrodniczek", "lisogr", "hasloliska", "pasterpasslika", new ArrayList<>()));
