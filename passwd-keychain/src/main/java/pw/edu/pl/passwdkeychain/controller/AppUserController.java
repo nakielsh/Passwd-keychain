@@ -1,4 +1,4 @@
-package pw.edu.pl.passwdkeychain.api;
+package pw.edu.pl.passwdkeychain.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -6,7 +6,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import pw.edu.pl.passwdkeychain.domain.Password;
 import pw.edu.pl.passwdkeychain.service.AppUserService;
 

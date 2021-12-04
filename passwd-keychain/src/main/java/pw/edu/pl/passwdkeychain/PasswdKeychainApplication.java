@@ -9,6 +9,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import pw.edu.pl.passwdkeychain.domain.AppUser;
 import pw.edu.pl.passwdkeychain.domain.Password;
 import pw.edu.pl.passwdkeychain.service.AppUserService;
+import pw.edu.pl.passwdkeychain.service.PasswordService;
+import pw.edu.pl.passwdkeychain.service.PasswordServiceImpl;
 
 import java.util.ArrayList;
 

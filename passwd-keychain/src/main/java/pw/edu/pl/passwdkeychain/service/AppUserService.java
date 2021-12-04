@@ -12,4 +12,5 @@ public interface AppUserService {
     AppUser getAppUser(String username);
     List<AppUser> getAppUsers();
     List<Password> showPasswords();
+    AppUser getCurrentAppUser();
 }

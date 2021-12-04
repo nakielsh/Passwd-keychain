@@ -89,6 +89,7 @@ public class AppUserServiceImpl implements AppUserService, UserDetailsService {
         return (List<Password>) currentAppUser.getSavedPasswords();
     }
 
+    @Override
     public AppUser getCurrentAppUser() {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         String username = "";
