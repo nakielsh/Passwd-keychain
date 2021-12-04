@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -91,9 +92,16 @@ public class AppUserServiceImpl implements AppUserService, UserDetailsService {
     public AppUser getCurrentAppUser() {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         String username = "";
+        User principal;
         if (null != securityContext.getAuthentication()) {
-            username = (String) securityContext.getAuthentication().getPrincipal();
+            if (securityContext.getAuthentication().getPrincipal().getClass() == String.class) {
+                username = (String) securityContext.getAuthentication().getPrincipal();
 
+            } else {
+                principal = (User) securityContext.getAuthentication().getPrincipal();
+                username = principal.getUsername();
+
+            }
         }
         return getAppUser(username);
     }
