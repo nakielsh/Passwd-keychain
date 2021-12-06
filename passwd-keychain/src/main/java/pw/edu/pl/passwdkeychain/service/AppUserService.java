@@ -7,8 +7,8 @@ import java.util.List;
 
 public interface AppUserService {
     AppUser saveAppUser(AppUser appUser);
-    Password savePassword(Password password);
-    void addPasswordToAppUser(String username, Long passwordId);
+//    Password savePassword(Password password);
+//    void addPasswordToAppUser(String username, Long passwordId);
     AppUser getAppUser(String username);
     List<AppUser> getAppUsers();
     List<Password> showPasswords();

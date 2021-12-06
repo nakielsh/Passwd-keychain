@@ -30,17 +30,17 @@ public class AppUserResource {
         return ResponseEntity.created(uri).body(appUserService.saveAppUser(appUser));
     }
 
-    @PostMapping("/password/save")
-    public ResponseEntity<Password> savePassword(@RequestBody Password password) {
-        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/password/save").toUriString());
-        return ResponseEntity.created(uri).body(appUserService.savePassword(password));
-    }
+//    @PostMapping("/password/save")
+//    public ResponseEntity<Password> savePassword(@RequestBody Password password) {
+//        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/password/save").toUriString());
+//        return ResponseEntity.created(uri).body(appUserService.savePassword(password));
+//    }
 
-    @PostMapping("/password/addtouser")
-    public ResponseEntity<?> addPasswordtoUser(@RequestBody PasswordToUserForm form) {
-        appUserService.addPasswordToAppUser(form.getUsername(), form.getPasswordId());
-        return ResponseEntity.ok().build();
-    }
+//    @PostMapping("/password/addtouser")
+//    public ResponseEntity<?> addPasswordtoUser(@RequestBody PasswordToUserForm form) {
+//        appUserService.addPasswordToAppUser(form.getUsername(), form.getPasswordId());
+//        return ResponseEntity.ok().build();
+//    }
 
     @GetMapping("/passwords")
     public ResponseEntity<List<Password>> showPasswords() {

@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,7 +18,8 @@ import pw.edu.pl.passwdkeychain.repo.AppUserRepo;
 import pw.edu.pl.passwdkeychain.repo.PasswordRepo;
 import pw.edu.pl.passwdkeychain.security.AES;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -39,23 +41,23 @@ public class AppUserServiceImpl implements AppUserService, UserDetailsService {
         return appUserRepo.save(appUser);
     }
 
-    @Override
-    public Password savePassword(Password password) {
-        log.info("Saving new password from service: {} to the database", password.getService());
-//        password.setSavedPassword(passwordEncoder.encode(password.getSavedPassword()));
-        return passwordRepo.save(password);
-    }
-
-    @Override
-    public void addPasswordToAppUser(String username, Long passwordId) {
-        log.info("Adding password with id: {} to the AppUser: {}", passwordId, username);
-        AppUser appUser = appUserRepo.findAppUserByUsername(username);
-        Password password = passwordRepo.findPasswordById(passwordId);
-
-        password.setSavedPassword(AES.encrypt(password.getSavedPassword(), appUser.getMasterPassword()));
-
-        appUser.getSavedPasswords().add(password);
-    }
+//    @Override
+//    public Password savePassword(Password password) {
+//        log.info("Saving new password from service: {} to the database", password.getService());
+////        password.setSavedPassword(passwordEncoder.encode(password.getSavedPassword()));
+//        return passwordRepo.save(password);
+//    }
+//
+//    @Override
+//    public void addPasswordToAppUser(String username, Long passwordId) {
+//        log.info("Adding password with id: {} to the AppUser: {}", passwordId, username);
+//        AppUser appUser = appUserRepo.findAppUserByUsername(username);
+//        Password password = passwordRepo.findPasswordById(passwordId);
+//
+//        password.setSavedPassword(AES.encrypt(password.getSavedPassword(), appUser.getMasterPassword()));
+//
+//        appUser.getSavedPasswords().add(password);
+//    }
 
     @Override
     public AppUser getAppUser(String username) {
@@ -84,6 +86,7 @@ public class AppUserServiceImpl implements AppUserService, UserDetailsService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public List<Password> showPasswords() {
         AppUser currentAppUser = getCurrentAppUser();
         return (List<Password>) currentAppUser.getSavedPasswords();

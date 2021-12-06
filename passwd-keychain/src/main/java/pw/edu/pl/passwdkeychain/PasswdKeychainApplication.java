@@ -27,17 +27,21 @@ public class PasswdKeychainApplication {
 	}
 
 	@Bean
-	CommandLineRunner run(AppUserService appUserService) {
+	CommandLineRunner run(AppUserService appUserService, PasswordService passwordService) {
 		return args -> {
-			Password pass1 = appUserService.savePassword(new Password( null, "Faceboook", "test"));
-			Password pass2 = appUserService.savePassword(new Password( null, "Twitter", "test"));
-			Password pass3 = appUserService.savePassword(new Password( null, "Instagram", "instapass"));
+			Password pass1 = new Password( "Faceboook", "test");
+			Password pass2 = new Password("Twitter", "test");
+			Password pass3 = new Password( "Instagram", "instapass");
 
-			appUserService.saveAppUser(new AppUser(null, "Lisek Ogrodniczek", "lisogr", "hasloliska", "pasterpasslika", new ArrayList<>()));
+			AppUser lisek = appUserService.saveAppUser(new AppUser(null, "Lisek Ogrodniczek", "lisogr", "hasloliska", "masterpassliska", new ArrayList<>()));
 
-			appUserService.addPasswordToAppUser("lisogr", pass1.getId());
-			appUserService.addPasswordToAppUser("lisogr", pass2.getId());
-			appUserService.addPasswordToAppUser("lisogr", pass3.getId());
+			passwordService.savePassword(pass1, "masterpassliska", lisek);
+			passwordService.savePassword(pass2, "masterpassliska", lisek);
+			passwordService.savePassword(pass3, "masterpassliska", lisek);
+
+//			appUserService.addPasswordToAppUser("lisogr", pass1.getId());
+//			appUserService.addPasswordToAppUser("lisogr", pass2.getId());
+//			appUserService.addPasswordToAppUser("lisogr", pass3.getId());
 		};
 	}
 
