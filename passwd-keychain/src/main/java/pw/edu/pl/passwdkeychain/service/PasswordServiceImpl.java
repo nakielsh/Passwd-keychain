@@ -67,12 +67,13 @@ public class PasswordServiceImpl implements PasswordService {
     }
 
     @Override
-    public Password editPassword(Password password) throws IllegalAccessException {
+    public Password editPassword(PasswordDTO passwordDTO) throws IllegalAccessException {
         AppUser currentAppUser = appUserService.getCurrentAppUser();
-        Password passwdToEdit = passwordRepo.findPasswordById(password.getId());
+        Password passwdToEdit = passwordRepo.findPasswordById(passwordDTO.getId());
         if (currentAppUser.getSavedPasswords().contains(passwdToEdit)) {
-            passwdToEdit.setSavedPassword(password.getSavedPassword());
-            passwdToEdit.setService(password.getService());
+            passwdToEdit.setSavedPassword(EncryptionDecryptionUtil.encrypt(passwordDTO.getMasterPassword(), passwordDTO.getSavedPassword()));
+
+            passwdToEdit.setService(passwordDTO.getService());
             return passwdToEdit;
         } else {
             throw new IllegalAccessException("You can only edit your passwords");

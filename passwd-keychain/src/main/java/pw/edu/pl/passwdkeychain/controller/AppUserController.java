@@ -24,14 +24,11 @@ public class AppUserController {
     private final AppUserService appUserService;
     private final PasswordService passwordService;
 
-    @GetMapping("/passwords")
-    public String showPasswords(Model model) throws IllegalAccessException {
+    @GetMapping("/home")
+    public String showPasswords(Model model) {
         List<Password> passwords = appUserService.showPasswords();
         List<Password> copiedPasswords = List.copyOf(passwords);
 
-        for ( Password password : copiedPasswords) {
-            password.setActualPassword(passwordService.decodePassword(password, "masterpassliska"));
-        }
         model.addAttribute("passwords", copiedPasswords);
         return "passwords-view";
     }
