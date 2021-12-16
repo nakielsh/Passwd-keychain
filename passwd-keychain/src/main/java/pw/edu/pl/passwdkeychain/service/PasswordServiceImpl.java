@@ -2,21 +2,17 @@ package pw.edu.pl.passwdkeychain.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import pw.edu.pl.passwdkeychain.domain.AppUser;
 import pw.edu.pl.passwdkeychain.domain.Password;
 import pw.edu.pl.passwdkeychain.dto.PasswordDTO;
 import pw.edu.pl.passwdkeychain.repo.AppUserRepo;
 import pw.edu.pl.passwdkeychain.repo.PasswordRepo;
-import pw.edu.pl.passwdkeychain.security.AES;
 import pw.edu.pl.passwdkeychain.security.EncryptionDecryptionUtil;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import static pw.edu.pl.passwdkeychain.security.AES.decrypt;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +30,6 @@ public class PasswordServiceImpl implements PasswordService {
         log.info("Saving new password from service: {} to the database", password.getService());
         AppUser appUserDB = appUserRepo.findAppUserByUsername(appUser.getUsername());
         password.setSavedPassword(EncryptionDecryptionUtil.encrypt(masterPassword, password.getSavedPassword()));
-//        password.setSavedPassword(AES.encrypt(password.getSavedPassword(), masterPassword));
 
         passwordRepo.save(password);
         appUserDB.getSavedPasswords().add(password);

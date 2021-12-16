@@ -1,7 +1,6 @@
 package pw.edu.pl.passwdkeychain.domain;
 
 import lombok.*;
-import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 

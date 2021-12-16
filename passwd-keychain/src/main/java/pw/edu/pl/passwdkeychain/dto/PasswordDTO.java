@@ -1,14 +1,18 @@
 package pw.edu.pl.passwdkeychain.dto;
 
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
+import pw.edu.pl.passwdkeychain.security.validation.PasswordMatches;
+import pw.edu.pl.passwdkeychain.security.validation.ValidPassword;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Transient;
-
+//@FieldsValueMatch.List({
+//        @FieldsValueMatch(
+//                field = "savedPassword",
+//                fieldMatch = "savedPasswordAgain",
+//                message = "Passwords do not match!"
+//        )
+//})
+@PasswordMatches
 @Getter
 @Setter
 public class PasswordDTO {
@@ -17,9 +21,10 @@ public class PasswordDTO {
 
     private String service;
 
+    @ValidPassword
     private String savedPassword;
+
     private String savedPasswordAgain;
 
     private String masterPassword;
-
 }

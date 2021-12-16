@@ -3,19 +3,19 @@ package pw.edu.pl.passwdkeychain.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pw.edu.pl.passwdkeychain.domain.Password;
 import pw.edu.pl.passwdkeychain.dto.PasswordDTO;
-import pw.edu.pl.passwdkeychain.service.AppUserService;
 import pw.edu.pl.passwdkeychain.service.PasswordService;
+
+import javax.validation.Valid;
 
 @Controller
 @RequiredArgsConstructor
 public class PasswordController {
 
-//    private final AppUserService appUserService;
     private final PasswordService passwordService;
 
     @RequestMapping("/password/delete/{id}")
@@ -29,7 +29,6 @@ public class PasswordController {
         if (isDeleted) {
             redirectAttributes.addFlashAttribute("success", "Successfully deleted password");
         }
-
         return "redirect:/home";
     }
 
@@ -39,20 +38,30 @@ public class PasswordController {
     }
 
     @GetMapping("/password/add")
-    public String addPassword(@ModelAttribute("passwordDTO") PasswordDTO passwordDTO, Model model) {
-        model.addAttribute("passwordDTO", passwordDTO);
+    public String addPassword(Model model) {
+        model.addAttribute("passwordDTO", new PasswordDTO());
         return "password-add";
     }
 
     @PostMapping("/password/add")
-    public String addPassword(@Validated PasswordDTO passwordDTO, Model model, RedirectAttributes redirectAttributes) {
-        model.addAttribute("passwordDTO", passwordDTO);
+    public String addPassword(@Valid @ModelAttribute("passwordDTO") PasswordDTO passwordDTO, BindingResult result, RedirectAttributes redirectAttributes) {
+//        model.addAttribute("passwordDTO", passwordDTO);
+        if (result.hasErrors()) {
+            if (result.hasFieldErrors()) {
+                redirectAttributes.addFlashAttribute("error", result.getFieldError().getDefaultMessage());
+            } else {
+                redirectAttributes.addFlashAttribute("error", result.getAllErrors().get(0).getDefaultMessage());
+
+            }
+            return "redirect:/password/add";
+        }
+
         if (!passwordService.isEqualToMasterPassword(passwordDTO.getMasterPassword())) {
             redirectAttributes.addFlashAttribute("error", "Wrong master password");
             return "redirect:/password/add";
         } else {
             Password password = passwordService.createPassword(passwordDTO);
-            redirectAttributes.addFlashAttribute("success", "Added password to service: " + password.getService() );
+            redirectAttributes.addFlashAttribute("success", "Added password to service: " + password.getService());
             return "redirect:/home";
         }
     }
@@ -81,12 +90,11 @@ public class PasswordController {
         try {
             Password password = passwordService.getPassword(id);
 
-                String actualPassword = passwordService.decodePassword(password, masterPassword);
-                password.setActualPassword(actualPassword);
+            String actualPassword = passwordService.decodePassword(password, masterPassword);
+            password.setActualPassword(actualPassword);
 
-                redirectAttributes.addFlashAttribute("password", password);
-                isPasswordDecoded = true;
-
+            redirectAttributes.addFlashAttribute("password", password);
+            isPasswordDecoded = true;
 
         } catch (IllegalAccessException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
@@ -113,7 +121,11 @@ public class PasswordController {
     }
 
     @RequestMapping("/password/edit/{id}")
-    public String showPasswordToEdit(@PathVariable Long id, @Validated PasswordDTO passwordDTO, RedirectAttributes redirectAttributes) {
+    public String showPasswordToEdit(@PathVariable Long id, @Valid PasswordDTO passwordDTO, RedirectAttributes redirectAttributes, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("error", "Password invalid");
+            return "redirect:/password/edit/" + id;
+        }
 
         if (!passwordService.isEqualToMasterPassword(passwordDTO.getMasterPassword())) {
             redirectAttributes.addFlashAttribute("error", "Wrong master password");
@@ -129,11 +141,9 @@ public class PasswordController {
                 redirectAttributes.addFlashAttribute("error", e.getMessage());
             }
         }
-
         return "redirect:/home";
 
     }
-
 
 
 }
