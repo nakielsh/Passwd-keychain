@@ -45,13 +45,11 @@ public class PasswordController {
 
     @PostMapping("/password/add")
     public String addPassword(@Valid @ModelAttribute("passwordDTO") PasswordDTO passwordDTO, BindingResult result, RedirectAttributes redirectAttributes) {
-//        model.addAttribute("passwordDTO", passwordDTO);
         if (result.hasErrors()) {
             if (result.hasFieldErrors()) {
                 redirectAttributes.addFlashAttribute("error", result.getFieldError().getDefaultMessage());
             } else {
                 redirectAttributes.addFlashAttribute("error", result.getAllErrors().get(0).getDefaultMessage());
-
             }
             return "redirect:/password/add";
         }
@@ -121,9 +119,13 @@ public class PasswordController {
     }
 
     @RequestMapping("/password/edit/{id}")
-    public String showPasswordToEdit(@PathVariable Long id, @Valid PasswordDTO passwordDTO, RedirectAttributes redirectAttributes, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            redirectAttributes.addFlashAttribute("error", "Password invalid");
+    public String showPasswordToEdit(@PathVariable Long id, @Valid @ModelAttribute("passwordDTO") PasswordDTO passwordDTO, BindingResult result, RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) {
+            if (result.hasFieldErrors()) {
+                redirectAttributes.addFlashAttribute("error", result.getFieldError().getDefaultMessage());
+            } else {
+                redirectAttributes.addFlashAttribute("error", result.getAllErrors().get(0).getDefaultMessage());
+            }
             return "redirect:/password/edit/" + id;
         }
 

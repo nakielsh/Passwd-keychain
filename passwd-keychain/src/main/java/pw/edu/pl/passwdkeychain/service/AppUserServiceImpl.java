@@ -62,7 +62,14 @@ public class AppUserServiceImpl implements AppUserService, UserDetailsService {
     @Override
     public AppUser getAppUser(String username) {
         log.info("Fetching user: {}", username);
-        return appUserRepo.findAppUserByUsername(username);
+        AppUser appUser = appUserRepo.findAppUserByUsername(username);
+        if(appUser == null) {
+            log.info("User not found in the database");
+            throw new UsernameNotFoundException("User not found in the database");
+        } else {
+            log.info("User found in the database: {}", username);
+            return appUser;
+        }
     }
 
     @Override
