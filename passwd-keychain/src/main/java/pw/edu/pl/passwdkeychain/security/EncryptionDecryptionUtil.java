@@ -14,8 +14,8 @@ public class EncryptionDecryptionUtil {
 
     public static String encrypt(final String secret, final String data) {
 
-
-        byte[] decodedKey = Base64.getDecoder().decode(secret);
+        String encodedString = Base64.getEncoder().encodeToString(secret.getBytes());
+        byte[] decodedKey = Base64.getDecoder().decode(encodedString);
 
         try {
             Cipher cipher = Cipher.getInstance("AES");
@@ -34,8 +34,8 @@ public class EncryptionDecryptionUtil {
     public static String decrypt(final String secret,
                                  final String encryptedString) {
 
-
-        byte[] decodedKey = Base64.getDecoder().decode(secret);
+        String encodedString = Base64.getEncoder().encodeToString(secret.getBytes());
+        byte[] decodedKey = Base64.getDecoder().decode(encodedString);
 
         try {
             Cipher cipher = Cipher.getInstance("AES");
