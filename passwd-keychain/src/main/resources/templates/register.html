@@ -17,8 +17,10 @@
                 <div class="row" style="display: flex; justify-content: center; margin: 5px">
                     <img class="img-fluid" style="max-width: 30%" src="https://imgur.com/SKPq2HJ.png">
                 </div>
-                <div th:if="${error != null}" class="alert alert-danger" role="alert">
-                    <p th:text="${error}">Error</p>
+                <div th:if="${error != null}" >
+                    <li th:each="message : ${error.split(',')}">
+                        <p class="alert alert-danger" role="alert" th:text="${message}"></p>
+                    </li>
                 </div>
                 <div class="row" style="display: flex; justify-content: center">
                     <form method="post" th:action="@{/registration}" th:object="${appUserDTO}">
