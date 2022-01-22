@@ -4,15 +4,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pw.edu.pl.passwdkeychain.domain.AppUser;
 import pw.edu.pl.passwdkeychain.domain.Password;
 import pw.edu.pl.passwdkeychain.dto.PasswordDTO;
 import pw.edu.pl.passwdkeychain.repo.AppUserRepo;
 import pw.edu.pl.passwdkeychain.repo.PasswordRepo;
 import pw.edu.pl.passwdkeychain.security.EncryptionDecryptionUtil;
-
-import org.springframework.transaction.annotation.Transactional;
-
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +27,8 @@ public class PasswordServiceImpl implements PasswordService {
     public Password savePassword(Password password, String masterPassword, AppUser appUser) {
         log.info("Saving new password from service: {} to the database", password.getService());
         AppUser appUserDB = appUserRepo.findAppUserByUsername(appUser.getUsername());
-        password.setSavedPassword(EncryptionDecryptionUtil.encrypt(masterPassword, password.getSavedPassword()));
+        password.setSavedPassword(
+                EncryptionDecryptionUtil.encrypt(masterPassword, password.getSavedPassword()));
 
         passwordRepo.save(password);
         appUserDB.getSavedPasswords().add(password);
@@ -66,7 +65,9 @@ public class PasswordServiceImpl implements PasswordService {
         AppUser currentAppUser = appUserService.getCurrentAppUser();
         Password passwdToEdit = passwordRepo.findPasswordById(passwordDTO.getId());
         if (currentAppUser.getSavedPasswords().contains(passwdToEdit)) {
-            passwdToEdit.setSavedPassword(EncryptionDecryptionUtil.encrypt(passwordDTO.getMasterPassword(), passwordDTO.getSavedPassword()));
+            passwdToEdit.setSavedPassword(
+                    EncryptionDecryptionUtil.encrypt(
+                            passwordDTO.getMasterPassword(), passwordDTO.getSavedPassword()));
 
             passwdToEdit.setService(passwordDTO.getService());
             return passwdToEdit;
@@ -76,7 +77,8 @@ public class PasswordServiceImpl implements PasswordService {
     }
 
     @Override
-    public String decodePassword(Password password, String masterPassword) throws IllegalAccessException {
+    public String decodePassword(Password password, String masterPassword)
+            throws IllegalAccessException {
         String realMasterPassword = appUserService.getCurrentAppUser().getMasterPassword();
         if (passwordEncoder.matches(masterPassword, realMasterPassword)) {
             return EncryptionDecryptionUtil.decrypt(masterPassword, password.getSavedPassword());

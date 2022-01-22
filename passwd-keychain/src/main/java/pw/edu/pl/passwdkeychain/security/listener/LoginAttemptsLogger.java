@@ -13,20 +13,16 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class LoginAttemptsLogger {
 
-
     @EventListener
-    public void auditEventHappened(
-            AuditApplicationEvent auditApplicationEvent) {
+    public void auditEventHappened(AuditApplicationEvent auditApplicationEvent) {
 
         AuditEvent auditEvent = auditApplicationEvent.getAuditEvent();
 
         WebAuthenticationDetails details =
                 (WebAuthenticationDetails) auditEvent.getData().get("details");
 
-        log.warn("Principal " + auditEvent.getPrincipal()
-                + " - " + auditEvent.getType());
-        log.warn("  Remote IP address: "
-                + details.getRemoteAddress());
+        log.warn("Principal " + auditEvent.getPrincipal() + " - " + auditEvent.getType());
+        log.warn("  Remote IP address: " + details.getRemoteAddress());
         log.warn("  Session Id: " + details.getSessionId());
     }
 
@@ -35,4 +31,3 @@ public class LoginAttemptsLogger {
         return new InMemoryAuditEventRepository();
     }
 }
-

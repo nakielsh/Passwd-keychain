@@ -1,68 +1,74 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Register</title>
-    <meta property="og:type" content="website">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
-          integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport">
+  <title>Register</title>
+  <meta content="website" property="og:type">
+  <link crossorigin="anonymous"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+        integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l"
+        rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"
+        rel="stylesheet">
 </head>
 <body>
 <div class="text-center w-100">
-    <div class="form-container">
-        <div class="container">
-            <div class="column">
-                <div class="row" style="display: flex; justify-content: center; margin: 5px">
-                    <img class="img-fluid" style="max-width: 30%" src="https://imgur.com/SKPq2HJ.png">
-                </div>
-                <div th:if="${error != null}" >
-                    <li th:each="message : ${error.split(',')}">
-                        <p class="alert alert-danger" role="alert" th:text="${message}"></p>
-                    </li>
-                </div>
-                <div class="row" style="display: flex; justify-content: center">
-                    <form method="post" th:action="@{/registration}" th:object="${appUserDTO}">
-                        <h2>
-                            <strong>Register</strong>
-                        </h2>
-
-                        <input th:field="*{name}" class="form-control" type="text" id="name"
-                               name="name"
-                               placeholder="Name">
-                        <input th:field="*{username}" class="form-control" type="text" id="username"
-                               name="username"
-                               placeholder="Username">
-                        <input th:field="*{password}" class="form-control" type="password" id="password"
-                               name="password"
-                               placeholder="Password">
-                        <input th:field="*{matchingPassword}" class="form-control" type="password" id="matchingPassword"
-                               name="matchingPassword"
-                               placeholder="Confirm Password">
-                        <input th:field="*{masterPassword}" class="form-control" type="password" id="masterPassword"
-                               name="masterPassword"
-                               placeholder="Master Password">
-                        <input th:field="*{matchingMasterPassword}" class="form-control" type="password"
-                               id="matchingMasterPassword"
-                               name="matchingMasterPassword"
-                               placeholder="Confirm Master Password">
-
-                        <button class="btn btn-primary d-block w-100" data-bss-hover-animate="pulse" type="submit">
-                            Register
-                        </button>
-                        <a class="small-text" th:href="@{/login}" style="padding-top: 20px">
-                            Already have an account? Log in Here!
-                        </a>
-                        <a class="btn btn-outline-primary d-block w-100" type="button"
-                           data-bss-hover-animate="pulse" th:href="@{/login}">
-                            Log in
-                        </a>
-                    </form>
-                </div>
-            </div>
+  <div class="form-container">
+    <div class="container">
+      <div class="column">
+        <div class="row" style="display: flex; justify-content: center; margin: 5px">
+          <img class="img-fluid" src="https://imgur.com/SKPq2HJ.png" style="max-width: 30%">
         </div>
+        <div th:if="${error != null}">
+          <li th:each="message : ${error.split(',')}">
+            <p class="alert alert-danger" role="alert" th:text="${message}"></p>
+          </li>
+        </div>
+        <div class="row" style="display: flex; justify-content: center">
+          <form method="post" th:action="@{/registration}" th:object="${appUserDTO}">
+            <h2>
+              <strong>Register</strong>
+            </h2>
+
+            <input class="form-control" id="name" name="name" placeholder="Name"
+                   th:field="*{name}"
+                   type="text">
+            <input class="form-control" id="username" name="username" placeholder="Username"
+                   th:field="*{username}"
+                   type="text">
+            <input class="form-control" id="password" name="password" placeholder="Password"
+                   th:field="*{password}"
+                   type="password">
+            <input class="form-control" id="matchingPassword" name="matchingPassword"
+                   placeholder="Confirm Password"
+                   th:field="*{matchingPassword}"
+                   type="password">
+            <input class="form-control" id="masterPassword" name="masterPassword"
+                   placeholder="Master Password"
+                   th:field="*{masterPassword}"
+                   type="password">
+            <input class="form-control" id="matchingMasterPassword" name="matchingMasterPassword"
+                   placeholder="Confirm Master Password"
+                   th:field="*{matchingMasterPassword}"
+                   type="password">
+
+            <button class="btn btn-primary d-block w-100" data-bss-hover-animate="pulse"
+                    type="submit">
+              Register
+            </button>
+            <a class="small-text" style="padding-top: 20px" th:href="@{/login}">
+              Already have an account? Log in Here!
+            </a>
+            <a class="btn btn-outline-primary d-block w-100" data-bss-hover-animate="pulse"
+               th:href="@{/login}" type="button">
+              Log in
+            </a>
+          </form>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 
 </body>

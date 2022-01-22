@@ -1,12 +1,10 @@
 package pw.edu.pl.passwdkeychain.security.validation;
 
-import org.springframework.beans.BeanWrapperImpl;
-
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import org.springframework.beans.BeanWrapperImpl;
 
-public class FieldsValueMatchValidator
-        implements ConstraintValidator<FieldsValueMatch, Object> {
+public class FieldsValueMatchValidator implements ConstraintValidator<FieldsValueMatch, Object> {
 
     private String field;
     private String fieldMatch;
@@ -16,13 +14,10 @@ public class FieldsValueMatchValidator
         this.fieldMatch = constraintAnnotation.fieldMatch();
     }
 
-    public boolean isValid(Object value,
-                           ConstraintValidatorContext context) {
+    public boolean isValid(Object value, ConstraintValidatorContext context) {
 
-        Object fieldValue = new BeanWrapperImpl(value)
-                .getPropertyValue(field);
-        Object fieldMatchValue = new BeanWrapperImpl(value)
-                .getPropertyValue(fieldMatch);
+        Object fieldValue = new BeanWrapperImpl(value).getPropertyValue(field);
+        Object fieldMatchValue = new BeanWrapperImpl(value).getPropertyValue(fieldMatch);
 
         if (fieldValue != null) {
             return fieldValue.equals(fieldMatchValue);

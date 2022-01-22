@@ -1,16 +1,21 @@
 package pw.edu.pl.passwdkeychain.controller;
 
+import java.util.Objects;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pw.edu.pl.passwdkeychain.domain.Password;
 import pw.edu.pl.passwdkeychain.dto.PasswordDTO;
 import pw.edu.pl.passwdkeychain.service.PasswordService;
-
-import javax.validation.Valid;
 
 @Controller
 @RequiredArgsConstructor
@@ -44,12 +49,18 @@ public class PasswordController {
     }
 
     @PostMapping("/password/add")
-    public String addPassword(@Valid @ModelAttribute("passwordDTO") PasswordDTO passwordDTO, BindingResult result, RedirectAttributes redirectAttributes) {
+    public String addPassword(
+            @Valid @ModelAttribute("passwordDTO") PasswordDTO passwordDTO,
+            BindingResult result,
+            RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             if (result.hasFieldErrors()) {
-                redirectAttributes.addFlashAttribute("error", result.getFieldError().getDefaultMessage());
+                redirectAttributes.addFlashAttribute(
+                        "error",
+                        Objects.requireNonNull(result.getFieldError()).getDefaultMessage());
             } else {
-                redirectAttributes.addFlashAttribute("error", result.getAllErrors().get(0).getDefaultMessage());
+                redirectAttributes.addFlashAttribute(
+                        "error", result.getAllErrors().get(0).getDefaultMessage());
             }
             return "redirect:/password/add";
         }
@@ -59,19 +70,20 @@ public class PasswordController {
             return "redirect:/password/add";
         } else {
             Password password = passwordService.createPassword(passwordDTO);
-            redirectAttributes.addFlashAttribute("success", "Added password to service: " + password.getService());
+            redirectAttributes.addFlashAttribute(
+                    "success", "Added password to service: " + password.getService());
             return "redirect:/home";
         }
     }
 
     @GetMapping("/password/show/{id}")
-    public String showPassword(@PathVariable Long id, RedirectAttributes redirectAttributes, Model model) {
+    public String showPassword(
+            @PathVariable Long id, RedirectAttributes redirectAttributes, Model model) {
         Password password;
         try {
             password = passwordService.getPassword(id);
 
-            if (!model.containsAttribute("password"))
-                model.addAttribute("password", password);
+            if (!model.containsAttribute("password")) model.addAttribute("password", password);
             if (!model.containsAttribute("isPasswordDecoded"))
                 model.addAttribute("isPasswordDecoded", false);
 
@@ -83,7 +95,11 @@ public class PasswordController {
     }
 
     @RequestMapping("/password/show/{id}")
-    public String showPassword(@PathVariable Long id, @RequestParam("masterPassword") String masterPassword, Model model, RedirectAttributes redirectAttributes) {
+    public String showPassword(
+            @PathVariable Long id,
+            @RequestParam("masterPassword") String masterPassword,
+            Model model,
+            RedirectAttributes redirectAttributes) {
         boolean isPasswordDecoded = false;
         try {
             Password password = passwordService.getPassword(id);
@@ -103,13 +119,13 @@ public class PasswordController {
     }
 
     @GetMapping("/password/edit/{id}")
-    public String editPassword(@PathVariable Long id, RedirectAttributes redirectAttributes, Model model) {
+    public String editPassword(
+            @PathVariable Long id, RedirectAttributes redirectAttributes, Model model) {
         Password password;
         try {
             password = passwordService.getPassword(id);
 
-            if (!model.containsAttribute("password"))
-                model.addAttribute("password", password);
+            if (!model.containsAttribute("password")) model.addAttribute("password", password);
 
         } catch (IllegalAccessException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
@@ -119,12 +135,19 @@ public class PasswordController {
     }
 
     @RequestMapping("/password/edit/{id}")
-    public String showPasswordToEdit(@PathVariable Long id, @Valid @ModelAttribute("passwordDTO") PasswordDTO passwordDTO, BindingResult result, RedirectAttributes redirectAttributes) {
+    public String showPasswordToEdit(
+            @PathVariable Long id,
+            @Valid @ModelAttribute("passwordDTO") PasswordDTO passwordDTO,
+            BindingResult result,
+            RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             if (result.hasFieldErrors()) {
-                redirectAttributes.addFlashAttribute("error", result.getFieldError().getDefaultMessage());
+                redirectAttributes.addFlashAttribute(
+                        "error",
+                        Objects.requireNonNull(result.getFieldError()).getDefaultMessage());
             } else {
-                redirectAttributes.addFlashAttribute("error", result.getAllErrors().get(0).getDefaultMessage());
+                redirectAttributes.addFlashAttribute(
+                        "error", result.getAllErrors().get(0).getDefaultMessage());
             }
             return "redirect:/password/edit/" + id;
         }
@@ -144,8 +167,5 @@ public class PasswordController {
             }
         }
         return "redirect:/home";
-
     }
-
-
 }
